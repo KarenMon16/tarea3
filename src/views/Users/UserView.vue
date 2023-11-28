@@ -10,13 +10,25 @@ export default {
   },
   methods: {
     getUsers() {
-      axios.get('http://localhost:8080/users/allUsers').then(res => {
+      axios.get('http://localhost:8080/userDetail/allUsers').then(res => {
         this.users = res.data;
       }).catch(function (error) {
         // handle error on UI site
       })
     },
+
+    deleteUser(userId) {
+      if (confirm('Are you sure, you want to delete this data?')) {
+        axios.delete(`http://localhost:8080/userDetail/${userId}`).then(res => {
+          this.getUsers();
+        }).catch(function (error) {
+          // handle error on UI site
+        })
+      }
+    }
   },
+
+
   mounted() {
     this.getUsers();
   }
@@ -31,7 +43,7 @@ export default {
       <div class="card-header">
         <h4>
           Users
-          <RouterLink to="/users/create" class="btn btn-primary float-end">
+          <RouterLink to="/userDetail/create" class="btn btn-primary float-end">
             Add User
           </RouterLink>
         </h4>
@@ -54,8 +66,13 @@ export default {
             <td>{{ user.firstName }}</td>
             <td>{{ user.lastName }}</td>
             <td>{{ user.age }}</td>
-            <td>{{ user.birthday }}</td>
-            <td>{{ user.birthday }}</td>
+            <td>{{ new Date(user.birthday).toLocaleDateString() }}</td>
+            <td><RouterLink :to="{ path: '/userDetail/' + user.id + '/edit' }" class="btn btn-success">
+              Edit
+            </RouterLink>
+              <button type="button" @click="deleteUser(user.id)" class="btn btn-danger">
+                Delete
+              </button></td>
           </tr>
           </tbody>
           <tbody v-else>

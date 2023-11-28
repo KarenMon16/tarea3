@@ -2,10 +2,9 @@
 import axios from "axios";
 
 export default {
-  name: "UserEditView",
+  name: "UserCreateView",
   data() {
     return {
-      userId: '',
       model: {
         userDetail: {
           firstName: '',
@@ -18,25 +17,21 @@ export default {
     }
   },
   methods: {
-    get(userId) {
-      axios.get(`http://localhost:8080/userDetail?id=${userId}`).then(res => {
-        this.model.userDetail = res.data;
-      }).catch(function (error) {
-      })
-    },
-    update() {
-      axios.put(`http://localhost:8080/userDetail/${this.userId}`, this.model.userDetail)
+    saveUser() {
+      axios.post('http://localhost:8080/userDetail', this.model.userDetail)
           .then(res => {
-            alert('User edited successful');
+            alert('Student was saved successful');
+            this.model.userdetail = {
+              firstName: '',
+              lastName: '',
+              age: '',
+              birthday: '',
+              userId: ''
+            }
           }).catch(function (error) {
-        // handle error on UI site
+        // hangle error on UI site
       })
     }
-  },
-  mounted() {
-    this.userId = this.$route.params.id;
-    console.log(this.userId);
-    this.get(this.userId);
   }
 }
 </script>
@@ -45,7 +40,7 @@ export default {
   <div class="container mt-5">
     <div class="card">
       <div class="card-header">
-        <h4>Edit Student</h4>
+        <h4>Add Students</h4>
       </div>
       <div class="card-body">
         <div class="mb-3">
@@ -57,23 +52,19 @@ export default {
           <input type="text" v-model="model.userDetail.lastName" class="form-control">
         </div>
         <div class="mb-3">
-          <label for="">Email</label>
+          <label for="">Age</label>
           <input type="text" v-model="model.userDetail.age" class="form-control">
         </div>
         <div class="mb-3">
-          <label for="">Age</label>
+          <label for="">Birthday</label>
           <input type="text" v-model="model.userDetail.birthday" class="form-control">
         </div>
         <div class="mb-3">
-          <label for="">Card Number</label>
-          <input type="text" v-model="model.userDetail.userId" class="form-control">
-        </div>
-        <div class="mb-3">
-          <button type="button" @click="update" class="btn btn-primary">
-            Edit
+          <button type="button" @click="saveUser" class="btn btn-primary">
+            Save
           </button>&nbsp;
           <RouterLink to="/userDetail" class="btn btn-primary">
-            Go Back
+            Back
           </RouterLink>
         </div>
       </div>
